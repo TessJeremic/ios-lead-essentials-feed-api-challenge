@@ -8,9 +8,9 @@
 
 import Foundation
 
-internal final class FeedImageMapper {
+enum FeedImageMapper {
 	private struct RemoteObject: Decodable {
-		var items: [RemoteFeedImage]
+		let items: [RemoteFeedImage]
 		var feedImages: [FeedImage] {
 			return items.map { $0.feedImage }
 		}
@@ -27,9 +27,9 @@ internal final class FeedImageMapper {
 		}
 	}
 
-	static private let ValidStatusCode = 200
-	internal static func map(data: Data, from response: HTTPURLResponse) -> FeedLoader.Result {
-		guard response.statusCode == ValidStatusCode, let remoteObject = try? JSONDecoder().decode(RemoteObject.self, from: data) else {
+	static private let validStatusCode = 200
+	static func map(data: Data, from response: HTTPURLResponse) -> FeedLoader.Result {
+		guard response.statusCode == validStatusCode, let remoteObject = try? JSONDecoder().decode(RemoteObject.self, from: data) else {
 			return .failure(RemoteFeedLoader.Error.invalidData)
 		}
 
